@@ -81,8 +81,11 @@ namespace ZXing.Net.Maui
 		public static void MapOptions(CameraBarcodeReaderViewHandler handler, ICameraBarcodeReaderView cameraBarcodeReaderView)
 			=> handler.BarcodeReader.Options = cameraBarcodeReaderView.Options;
 
-		public static void MapIsDetecting(CameraBarcodeReaderViewHandler handler, ICameraBarcodeReaderView cameraBarcodeReaderView)
-		{ }
+        public static void MapIsDetecting(CameraBarcodeReaderViewHandler handler, ICameraBarcodeReaderView cameraBarcodeReaderView)
+        {
+			if (!cameraBarcodeReaderView.IsDetecting) return;
+			handler.cameraManager.UpdateCamera();
+        }
 
 		public void Focus(Point point)
 			=> cameraManager?.Focus(point);
