@@ -1,31 +1,10 @@
-﻿using System;
-using Android.Content;
-using Android.Graphics;
-using Android.Hardware.Camera2;
-using Android.Hardware.Camera2.Params;
-using Android.Media;
-using Android.Nfc;
-using Android.OS;
-using Android.Renderscripts;
-using Android.Runtime;
-using Android.Util;
-using Android.Views;
+﻿using Android.Graphics;
 using AndroidX.Camera.Core;
 using AndroidX.Camera.Lifecycle;
 using AndroidX.Camera.View;
 using AndroidX.Core.Content;
-using Java.Util;
 using Java.Util.Concurrent;
-using Microsoft.Maui;
-using Microsoft.Maui.Handlers;
-using Microsoft.Extensions.DependencyInjection;
-using static Android.Hardware.Camera;
-using static Android.Provider.Telephony;
-using static Java.Util.Concurrent.Flow;
 using AView = Android.Views.View;
-using Android.Hardware;
-using static Android.Graphics.Paint;
-using AndroidX.Camera.Camera2.InterOp;
 
 namespace ZXing.Net.Maui
 {
