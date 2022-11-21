@@ -2,6 +2,8 @@
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Dispatching;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Handlers;
 
@@ -84,6 +86,11 @@ namespace ZXing.Net.Maui
         public static void MapIsDetecting(CameraBarcodeReaderViewHandler handler, ICameraBarcodeReaderView cameraBarcodeReaderView)
         {
 			if (!cameraBarcodeReaderView.IsDetecting) return;
+            if ((cameraBarcodeReaderView as View)?.Dispatcher is {} dispatcher && dispatcher.IsDispatchRequired)
+            {
+                dispatcher.Dispatch(handler.cameraManager.UpdateCamera);
+				return;
+            }
 			handler.cameraManager.UpdateCamera();
         }
 
