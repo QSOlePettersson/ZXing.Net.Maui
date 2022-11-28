@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,9 +75,16 @@ namespace ZXing.Net.Maui
 			VirtualView?.FrameReady(e);
 
 			if (VirtualView.IsDetecting)
-			{ 
-                var barcodes = BarcodeReader.Decode(e.Data, (int)e.CropRectangle.Left, (int)e.CropRectangle.Top, (int)e.CropRectangle.Width, (int)e.CropRectangle.Height);
-
+			{
+#if DEBUG
+                var timer = new Stopwatch();
+				timer.Start();
+#endif
+				var barcodes = BarcodeReader.Decode(e.Data, (int)e.CropRectangle.Left, (int)e.CropRectangle.Top, (int)e.CropRectangle.Width, (int)e.CropRectangle.Height);
+#if  DEBUG
+                timer.Stop();
+				Debug.WriteLine($"Found {(barcodes is not null ? barcodes.Length : 0)} barcodes in {timer.ElapsedMilliseconds}ms.");
+#endif
 				if (barcodes?.Any() ?? false)
 					VirtualView?.BarcodesDetected(new BarcodeDetectionEventArgs(barcodes));
 			}

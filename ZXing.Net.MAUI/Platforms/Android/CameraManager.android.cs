@@ -87,7 +87,7 @@ namespace ZXing.Net.Maui
 
                 camera = cameraProvider.BindToLifecycle(lifecycleOwner, cameraSelector, cameraPreview);
 
-                var resolution = cameraPreview.ResolutionInfo is { } resolutionInfo ? resolutionInfo.Resolution : new Android.Util.Size(1024, 1024);
+                var resolution = cameraPreview.ResolutionInfo is { } resolutionInfo ? resolutionInfo.Resolution : new Android.Util.Size(640, 480);
                 // Frame by frame analyze
                 imageAnalyzer = new ImageAnalysis.Builder()
                     .SetDefaultResolution(resolution)
