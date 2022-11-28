@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui;
@@ -6,6 +7,7 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui.Dispatching;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Handlers;
+using Point = Microsoft.Maui.Graphics.Point;
 
 namespace ZXing.Net.Maui
 {
@@ -72,8 +74,8 @@ namespace ZXing.Net.Maui
 			VirtualView?.FrameReady(e);
 
 			if (VirtualView.IsDetecting)
-			{
-				var barcodes = BarcodeReader.Decode(e.Data);
+			{ 
+                var barcodes = BarcodeReader.Decode(e.Data, (int)e.CropRectangle.Left, (int)e.CropRectangle.Top, (int)e.CropRectangle.Width, (int)e.CropRectangle.Height);
 
 				if (barcodes?.Any() ?? false)
 					VirtualView?.BarcodesDetected(new BarcodeDetectionEventArgs(barcodes));

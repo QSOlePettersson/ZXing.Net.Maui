@@ -34,19 +34,18 @@ namespace ZXing.Net.Maui
 			{
 				// Used to bind the lifecycle of cameras to the lifecycle owner
 				cameraProvider = (ProcessCameraProvider)cameraProviderFuture.Get();
+                // Preview
+                cameraPreview = new AndroidX.Camera.Core.Preview.Builder().Build();
+                cameraPreview.SetSurfaceProvider(previewView.SurfaceProvider);
 
-				// Preview
-				cameraPreview = new AndroidX.Camera.Core.Preview.Builder().Build();
-				cameraPreview.SetSurfaceProvider(previewView.SurfaceProvider);
-
-				// Frame by frame analyze
-				imageAnalyzer = new ImageAnalysis.Builder()
-					.SetDefaultResolution(new Android.Util.Size(640, 480))
-					.SetBackpressureStrategy(ImageAnalysis.StrategyKeepOnlyLatest)
-					.Build();
-
-				imageAnalyzer.SetAnalyzer(cameraExecutor, new FrameAnalyzer((buffer, size) =>
-					FrameReady?.Invoke(this, new CameraFrameBufferEventArgs(new Readers.PixelBufferHolder { Data = buffer, Size = size }))));
+                //var resolution = cameraPreview.ResolutionInfo is { } resolutionInfo ? resolutionInfo.Resolution : new Android.Util.Size(1024, 1024);
+                //// Frame by frame analyze
+                //imageAnalyzer = new ImageAnalysis.Builder()
+                //    //.SetDefaultResolution(resolution)
+                //    .SetBackpressureStrategy(ImageAnalysis.StrategyKeepOnlyLatest)
+                //    .Build();
+                //imageAnalyzer.SetAnalyzer(cameraExecutor, new FrameAnalyzer((buffer, size) =>
+                //    FrameReady?.Invoke(this, new CameraFrameBufferEventArgs(new Readers.PixelBufferHolder { Data = buffer, Size = size }))));
 
 				UpdateCamera();
 
@@ -77,16 +76,28 @@ namespace ZXing.Net.Maui
 					throw new System.Exception("Camera not found");
 
 				// The Context here SHOULD be something that's a lifecycle owner
-				if (Context.Context is AndroidX.Lifecycle.ILifecycleOwner lifecycleOwner)
-				{
-					camera = cameraProvider.BindToLifecycle(lifecycleOwner, cameraSelector, cameraPreview, imageAnalyzer);
-				}
-				else if (Microsoft.Maui.ApplicationModel.Platform.CurrentActivity is AndroidX.Lifecycle.ILifecycleOwner maLifecycleOwner)
-				{
-					// if not, this should be sufficient as a fallback
-					camera = cameraProvider.BindToLifecycle(maLifecycleOwner, cameraSelector, cameraPreview, imageAnalyzer);
-				}
-			}
+                if (Context.Context is not AndroidX.Lifecycle.ILifecycleOwner lifecycleOwner)
+                {
+                    // if not, this should be sufficient as a fallback
+                    lifecycleOwner =
+                        Microsoft.Maui.ApplicationModel.Platform.CurrentActivity as AndroidX.Lifecycle.ILifecycleOwner;
+                }
+
+                if (lifecycleOwner is null) return;
+
+                camera = cameraProvider.BindToLifecycle(lifecycleOwner, cameraSelector, cameraPreview);
+
+                var resolution = cameraPreview.ResolutionInfo is { } resolutionInfo ? resolutionInfo.Resolution : new Android.Util.Size(1024, 1024);
+                // Frame by frame analyze
+                imageAnalyzer = new ImageAnalysis.Builder()
+                    .SetDefaultResolution(resolution)
+                    .SetBackpressureStrategy(ImageAnalysis.StrategyKeepOnlyLatest)
+                    .Build();
+                imageAnalyzer.SetAnalyzer(cameraExecutor, new FrameAnalyzer((buffer, size) =>
+                    FrameReady?.Invoke(this, new CameraFrameBufferEventArgs(new Readers.PixelBufferHolder { Data = buffer, Size = size }))));
+
+                cameraProvider.BindToLifecycle(lifecycleOwner, cameraSelector, imageAnalyzer);
+            }
 		}
 
 		public void UpdateTorch(bool on)

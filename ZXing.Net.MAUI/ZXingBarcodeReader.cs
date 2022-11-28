@@ -26,27 +26,33 @@ namespace ZXing.Net.Maui.Readers
 			}
 		}
 
-		public BarcodeResult[] Decode(PixelBufferHolder image)
-		{
-			var w = (int)image.Size.Width;
-			var h = (int)image.Size.Height;
+        public BarcodeResult[] Decode(PixelBufferHolder image, int xOffset = 0, int yOffset = 0, int width = 0, int height = 0)
+        {
+            var w = (int)image.Size.Width;
+            var h = (int)image.Size.Height;
 
-			LuminanceSource ls = default;
+            LuminanceSource ls = default;
 
 #if ANDROID
-			ls = new ByteBufferYUVLuminanceSource(image.Data, w, h, 0, 0, w, h);
+            ls = width > 0 || height > 0
+                ? new ByteBufferYUVLuminanceSource(image.Data, w, h, xOffset, yOffset, width, height)
+                : new ByteBufferYUVLuminanceSource(image.Data, w, h, 0, 0, w, h);
 #elif MACCATALYST || IOS
-			ls = new CVPixelBufferBGRA32LuminanceSource(image.Data, w, h);
+            ls = new CVPixelBufferBGRA32LuminanceSource(image.Data, w, h);
+            if (width > 0 && height > 0)
+            {
+                ls = ls.crop(xOffset, yOffset, width, height);
+            }
 #endif
 
-			if (Options.Multiple)
-				return zxingReader.DecodeMultiple(ls)?.ToBarcodeResults();
+            if (Options.Multiple)
+                return zxingReader.DecodeMultiple(ls)?.ToBarcodeResults();
 
-			var b = zxingReader.Decode(ls)?.ToBarcodeResult();
-			if (b != null)
-				return new[] { b };
+            var b = zxingReader.Decode(ls)?.ToBarcodeResult();
+            if (b != null)
+                return new[] { b };
 
-			return null;
-		}
-	}
+            return null;
+        }
+    }
 }

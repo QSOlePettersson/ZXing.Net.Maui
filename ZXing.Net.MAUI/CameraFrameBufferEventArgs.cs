@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using ZXing.Net.Maui.Readers;
 
 namespace ZXing.Net.Maui
@@ -9,5 +10,7 @@ namespace ZXing.Net.Maui
 			=> Data = pixelBufferHolder;
 
 		public readonly PixelBufferHolder Data;
+
+		public RectangleF CropRectangle { get; set; } = RectangleF.Empty;
 	}
 }
