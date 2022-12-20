@@ -70,7 +70,7 @@ namespace ZXing.Net.Maui
 							FrameReady?.Invoke(this, new CameraFrameBufferEventArgs(new Readers.PixelBufferHolder
 								{
 									Data = cvPixelBuffer,
-									Size = new MSize(cvPixelBuffer.Width, cvPixelBuffer.Height)
+									Size = new MSize((int)cvPixelBuffer.Width, (int)cvPixelBuffer.Height)
 								}))
 					};
 				}

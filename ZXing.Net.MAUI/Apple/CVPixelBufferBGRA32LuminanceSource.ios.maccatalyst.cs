@@ -13,7 +13,7 @@ namespace ZXing.Net.Maui
 		//This drops 8 bytes from the original length to give us the expected length
 		public unsafe CVPixelBufferBGRA32LuminanceSource(CVPixelBuffer pixelBuffer, int width, int height)
 			: base(width, height)
-			=> CalculateLuminance((byte*)pixelBuffer.BaseAddress.ToPointer(), (int)(pixelBuffer.Height * pixelBuffer.Width * 4));
+			=> CalculateLuminance((byte*)pixelBuffer.BaseAddress.ToPointer(), (int)pixelBuffer.Height * (int)pixelBuffer.Width * 4);
 
 		public unsafe CVPixelBufferBGRA32LuminanceSource(byte* cvPixelByteArray, int cvPixelByteArrayLength, int width, int height)
 			: base(width, height) => CalculateLuminance(cvPixelByteArray, cvPixelByteArrayLength);
