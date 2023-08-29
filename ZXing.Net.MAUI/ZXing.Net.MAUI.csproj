@@ -26,9 +26,9 @@
 	  <CreatePackage>false</CreatePackage>
 	</PropertyGroup>
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-		<PackageReference Include="Xamarin.AndroidX.Camera.Camera2" Version="1.1.0" />
-		<PackageReference Include="Xamarin.AndroidX.Camera.Lifecycle" Version="1.1.0" />
-		<PackageReference Include="Xamarin.AndroidX.Camera.View" Version="1.1.0" />
+		<PackageReference Include="Xamarin.AndroidX.Camera.Camera2" Version="1.1.0.1" />
+		<PackageReference Include="Xamarin.AndroidX.Camera.Lifecycle" Version="1.1.0.1" />
+		<PackageReference Include="Xamarin.AndroidX.Camera.View" Version="1.1.0.1" />
 
 		<AndroidManifest Include="Platforms/Android/AndroidManifest.xml" />
 	</ItemGroup>
